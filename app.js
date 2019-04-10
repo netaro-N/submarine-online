@@ -10,7 +10,7 @@ var Strategy = require('passport-twitter').Strategy;
 var config = require('./config');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var gameRouter = require('./routes/game');
 
 passport.use(new Strategy({
     consumerKey: config.twitter.consumerKey,
@@ -50,7 +50,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/game', gameRouter);
 
 app.get('/login/twitter', 
   passport.authenticate('twitter')
