@@ -60,3 +60,17 @@ function drawRadar(ctxRader) {
   ctxRader.restore(); // 元の設定を取得
   gameObj.deg = (gameObj.deg + 5) % 360;
 }
+
+function drawSubmarine(ctxRader) {
+    ctxRader.save();
+    ctxRader.translate(gameObj.raderCanvasWidth / 2, gameObj.raderCanvasHeight / 2);
+
+    ctxRader.drawImage(
+        gameObj.submarineImage, -(gameObj.submarineImage.width / 2), -(gameObj.submarineImage.height / 2)
+    );
+    ctxRader.restore();
+}
+
+function getRadian(kakudo) {
+  return kakudo * Math.PI /180
+}
