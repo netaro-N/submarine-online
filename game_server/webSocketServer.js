@@ -1,7 +1,7 @@
 function createWebSocketServer(io, game) {
 
     const rootIo = io.of('/');
-    roootIo.on('connection', (socket) => {
+    rootIo.on('connection', (socket) => {
 
         const displayName = socket.handshake.query.displayName;
         const thumbUrl = socket.handshake.query.thumbUrl;
