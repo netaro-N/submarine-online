@@ -90,3 +90,40 @@ function disconnect(socketId) {
     gameObj.playersMap.delete(socketId);
 }
 
+function addItem() {
+    const itemX = Math.floor(Math.random() * gameObj.fieldWidth);
+    const itemY = Math.floor(Math.random() * gameObj.fieldHeight);
+    const itemKey = `${itemX},${itemY}`;
+
+    if (gameObj.itemsMap.has(itemKey)) { // アイテムの場所が被ってしまった場合は
+        return addItem();  // 場所が重複した場合は作り直し
+    }
+
+    const itemObj = {
+        x: itemX,
+        y: itemY,
+    };
+    gameObj.itemsMap.set(itemKey, itemObj);
+}
+
+function addAir() {
+    const airX = Math.floor(Math.random() * gameObj.fieldWidth);
+    const airY = Math.floor(Math.random() * gameObj.fieldHeight);
+    const airKey = `${airX},${airY}`;
+
+    if (gameObj.airMap.has(airKey)) { // アイテムの位置が被ってしまった場合は
+        return addAir(); // 場所が重複した場合は作り直し
+    }
+
+    const airObj = {
+        x: airX,
+        y: airY,
+    };
+    gameObj.airMap.set(airKey, airObj);
+}
+
+module.exports = {
+  newConnection,
+  getMapData,
+  disconnect
+};
