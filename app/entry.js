@@ -127,9 +127,11 @@ socket.on('map data', (compressed) => {
         gameObj.airMap.set(index, { x: compressedAirData[0],y: compressedAirData[1] });
     });
 
+    /*
     console.log(gameObj.playersMap);
     console.log(gameObj.itemsMap);
     console.log(gameObj.airMap);
+    */
 });
 
 function getRadian(kakudo) {
