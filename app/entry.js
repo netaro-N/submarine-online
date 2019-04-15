@@ -43,8 +43,11 @@ function init() {
 init();
 
 function ticker() {
+  if (!gameObj.myPlayerObj || !gameObj.playersMap) return;
+
   gameObj.ctxRader.clearRect(0, 0, gameObj.raderCanvasWidth, gameObj.raderCanvasHeight); // まっさら
   drawRadar(gameObj.ctxRader);
+  drawMap(gameObj);
   drawSubmarine(gameObj.ctxRader);
 }
 setInterval(ticker, 33);
@@ -136,4 +139,51 @@ socket.on('map data', (compressed) => {
 
 function getRadian(kakudo) {
   return kakudo * Math.PI /180
+}
+
+function drawMap(gameObj) {
+
+  // アイテムの描画
+  for (let [index, item] of gameObj.itemsMap) {
+
+    const distanceObj = calculationBetweenTwoPoints(
+      gameObj.myPlayerObj.x, gameObj.myPlayerObj.y,
+      item.x, item.y,
+      gameObj.fieldWidth, gameObj.fieldHeight,
+      gameObj.raderCanvasWidth, gameObj.raderCanvasHeight
+    );
+
+    if (distanceObj.distanceX <= (gameObj.raderCanvasWidth / 2) && distanceObj.distanceY <= (gameObj.raderCanvasHeight / 2)){
+
+      const degreeDiff = calcDegreeDiffFromRadar(gameObj.deg, distanceObj.degree);
+      const toumeido = calcOpacity(degreeDiff);
+
+      gameObj.ctxRader.fillStyle = `rgba(255, 165, 0, ${toumeido})`;
+      gameObj.ctxRader.beginPath();
+      gameObj.ctxRader.arc(distanceObj.drawX, distanceObj.drawY, gameObj.itemRadius, 0, Math.PI * 2, true);
+      gameObj.ctxRader.fill();
+    }
+  }
+
+  // 空気の描画
+  for (const [airKey, airObj] of gameObj.airMap) {
+
+    const disntanceObj = calculationBetweenTwoPoints(
+      gameObj.myPlayerObj.x, gameObj.myPlayerObj.y,
+      airObj.x, airObj.y,
+      gameObj.fieldWidth, gameObj.fieldHeight,
+      gameObj.raderCanvasWidth, gameObj.raderCanvasHeight
+    );
+
+    if (distanceObj.distanceX <= (gameObj.raderCanvasWidth / 2) && distanceObj.distanceY <= (gameObj.raderCanvasHeight / 2)) {
+
+        const degreeDiff = calcDegreeDiffFromRader(gameObj.deg, distanceObj.degree);
+        const toumeido = calcOpacity(degreeDiff);
+
+        gameObj.ctxRader.fileeStyle = `rgb(0, 220, 255, ${toumeido})`;
+        gameObj.ctxRader.beginPath();
+        gameObj.ctxRader.arc(disntanceObj.drawX, disntanceObj.drawY, gameObj.airRadius, 0, MathPI * 2, true);
+        gameObj.ctxRader.fill();
+    }
+  }
 }
