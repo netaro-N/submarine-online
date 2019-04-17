@@ -21,6 +21,10 @@ function init() {
 }
 init(); // 初期化（初期化はサーバー起動時に行う）
 
+const gameTicker = setInterval(() => {
+    movePlayers(gameObj.playersMap); // 潜水艦の移動
+}, 33);
+
 function newConnection(socketId, displayName, thumbUrl) {
     const playerX = Math.floor(Math.random() * gameObj.fieldWidth);
     const PlayerY = Math.floor(Math.random() * gameObj.fieldHeight);
@@ -127,3 +131,31 @@ module.exports = {
   getMapData,
   disconnect
 };
+
+function movePlayers(playersMap) {  // 潜水艦の移動
+    for (let [playerId, player] of playersMap) {
+
+        if (player.isAlive === false) {
+            continue;
+        }
+
+        switch (player.direction) {
+            case 'left':
+                player.x -= 1;
+                break;
+            case 'up':
+                player.y -= 1;
+                break;
+            case 'down':
+                player.y += 1;
+                break;
+            case 'right':
+                player.x += 1;
+                break;
+        }
+        if (player.x > gameObj.fieldWidth) player.x -= gameObj.fieldWidth;
+        if (player.x < 0) player.x += gameObj.fieldWidth;
+        if (player.x < 0) player.y += gameObj.fieldHeight;
+        if (player.x > gameObj.fieldWidth) player.y -= gameObj.fieldHeight;
+    }
+}
