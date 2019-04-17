@@ -8,7 +8,11 @@ const gameObj = {
     fieldWidth: 1000,
     fieldHeight: 1000,
     itemTotal: 15,
-    airTotal: 10
+    airTotal: 10,
+    itemRadius: 4,
+    airRadius: 6,
+    addAirTime: 30,
+    submarineImageWidth: 42
 };
 
 function init() {
@@ -23,6 +27,7 @@ init(); // 初期化（初期化はサーバー起動時に行う）
 
 const gameTicker = setInterval(() => {
     movePlayers(gameObj.playersMap); // 潜水艦の移動
+    checkGetItem(gameObj.playersMap, gameObj.itemsMap, gameObj.airMap); // アイテムの取得チェック
 }, 33);
 
 function movePlayers(playersMap) {  // 潜水艦の移動
@@ -48,9 +53,28 @@ function movePlayers(playersMap) {  // 潜水艦の移動
         }
         if (player.x > gameObj.fieldWidth) player.x -= gameObj.fieldWidth;
         if (player.x < 0) player.x += gameObj.fieldWidth;
-        if (player.x < 0) player.y += gameObj.fieldHeight;
-        if (player.x > gameObj.fieldWidth) player.y -= gameObj.fieldHeight;
+        if (player.y < 0) player.y += gameObj.fieldHeight;
+        if (player.y > gameObj.fieldWidth) player.y -= gameObj.fieldHeight;
+
+        player.aliveTime.clock += 1;
+        if (player.aliveTime.clock === 30) {
+            player.aliveTime.clock = 0;
+            player.aliveTime.seconds += 1;
+            decreaseAir(player);
+            player.score += 1;
+        }
     }
+}
+
+function decreaseAir(playerObj){
+    playerObj.airTime -= 1;
+    if (playerObj.airTime === 0) {
+        playerObj.isAlive = false;
+    }
+}
+
+function checkGetItem(playersMap, itemsMap, airMap) {
+    
 }
 
 function newConnection(socketId, displayName, thumbUrl) {
