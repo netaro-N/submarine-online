@@ -48,7 +48,7 @@ function init() {
 
   // ミサイルの画像
   gameObj.missileImage = new Image();
-  gameObj.missileImage.src = '/images/missile.pug';
+  gameObj.missileImage.src = '/images/missile.png';
 }
 init();
 
