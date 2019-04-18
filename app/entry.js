@@ -151,8 +151,8 @@ socket.on('map data', (compressed) => {
           gameObj.myPlayerObj.displayName = compressedPlayerData[3];
           gameObj.myPlayerObj.score = compressedPlayerData[4];
           gameObj.myPlayerObj.isAlive = compressedPlayerData[5];
-          gameObj.missilesMany = compressedPlayerData[7];
-          gameObj.airTime = compressedPlayerData[8];
+          gameObj.myPlayerObj.missilesMany = compressedPlayerData[7];
+          gameObj.myPlayerObj.airTime = compressedPlayerData[8];
       }
     }
 
