@@ -45,6 +45,10 @@ function init() {
   const submarineImage = new Image();
   submarineImage.src = '/images/submarine.png';
   gameObj.submarineImage = submarineImage;
+
+  // ミサイルの画像
+  gameObj.missileImage = new Image();
+  gameObj.missileImage.src = '/images/missile.pug';
 }
 init();
 
@@ -55,6 +59,10 @@ function ticker() {
   drawRadar(gameObj.ctxRader);
   drawMap(gameObj);
   drawSubmarine(gameObj.ctxRader, gameObj.myPlayerObj);
+
+  gameObj.ctxScore.clearRect(0, 0, gameObj.scoreCanvasWidth, gameObj.scoreCanvasHeight); // scoreCanvas もまっさら
+  drawAirTimer(gameObj.ctxScore, gameObj.myPlayerObj.airTime);
+  drawMissiles(gameObj.ctxScore, gameObj.myPlayerObj.missilesMany);
 }
 setInterval(ticker, 33);
 
@@ -96,6 +104,18 @@ function drawSubmarine(ctxRader, myPlayerObj) {
     ctxRader.restore();
 }
 
+function drawMissiles(ctxScore, missilesMany) {
+    for (let i = 0; i < missilesMany; i++) {
+        ctxScore.drawImage(gameObj.missileImage, 50 * i, 80);
+    }
+}
+
+function drawAirTimer(ctxScore, airTime) {
+    ctxScore.fillStyle = "rgb(0, 220, 250)";
+    ctxScore.font = 'bold 40px Arial';
+    ctxScore.fillText(airTime, 110, 50);
+}
+
 socket.on('start data', (startObj) => {
     gameObj.fieldWidth = startObj.fieldWidth;
     gameObj.fieldHeight = startObj.fieldHeight;
@@ -119,6 +139,8 @@ socket.on('map data', (compressed) => {
       player.score = compressedPlayerData[4];
       player.isAlive = compressedPlayerData[5];
       player.direction = compressedPlayerData[6];
+      player.missilesMany = compressedPlayerData[7];
+      player.airTime = compressedPlayerData[8];
 
       gameObj.playersMap.set(player.playerId, player);
 
@@ -129,6 +151,8 @@ socket.on('map data', (compressed) => {
           gameObj.myPlayerObj.displayName = compressedPlayerData[3];
           gameObj.myPlayerObj.score = compressedPlayerData[4];
           gameObj.myPlayerObj.isAlive = compressedPlayerData[5];
+          gameObj.missilesMany = compressedPlayerData[7];
+          gameObj.airTime = compressedPlayerData[8];
       }
     }
 
