@@ -181,6 +181,7 @@ socket.on('map data', (compressed) => {
       player.direction = compressedPlayerData[6];
       player.missilesMany = compressedPlayerData[7];
       player.airTime = compressedPlayerData[8];
+      player.deadCount = compressedPlayerData[9];
 
       gameObj.playersMap.set(player.playerId, player);
 
@@ -193,6 +194,7 @@ socket.on('map data', (compressed) => {
           gameObj.myPlayerObj.isAlive = compressedPlayerData[5];
           gameObj.myPlayerObj.missilesMany = compressedPlayerData[7];
           gameObj.myPlayerObj.airTime = compressedPlayerData[8];
+          gameObj.myPlayerObj.deadCount = compressedPlayerData[9];
       }
     }
 
@@ -233,6 +235,7 @@ function drawMap(gameObj) {
         if (distanceObj.distanceX <= (gameObj.raderCanvasWidth / 2) && distanceObj.distanceY <= (gameObj.raderCanvasHeight / 2)) {
 
             if (tekiPlayerObj.isAlive === false) {
+                drawBom(gameObj.ctxRader, distanceObj.drawX, distanceObj.drawY, tekiPlayerObj.deadCount);
                 continue;
             }
 
