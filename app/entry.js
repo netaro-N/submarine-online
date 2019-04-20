@@ -134,6 +134,7 @@ function drawBom(ctxRader, drawX ,drawY, deadCount) {
 
     const drawBomNumber = Math.floor(deadCount / 6);
     const cropX = (drawBomNumber % (gameObj.bomListImage.width / gameObj.bomCellPx)) * gameObj.bomCellPx;
+    const cropY = Math.floor(drawBomNumber / (gameObj.bomListImage.width / gameObj.bomCellPx)) * gameObj.bomCellPx;
 
     ctxRader.drawImage(
         gameObj.bomListImage,
