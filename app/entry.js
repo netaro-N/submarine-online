@@ -587,3 +587,61 @@ function sendMissileEmit(socket, direction) {
     socket.emit('missile emit', direction);
 }
 
+function moveInClient(myPlayerObj, flyingMissilesMap) {
+
+    if (myPlayerObj.isAlive === false) {
+        if (myPlayerObj.deadCount < 60) {
+            myPlayerObj.deadCount += 1;
+        }
+        return;
+    }
+
+    // 移動
+    switch (myPlayerObj.direction) {
+        case 'left':
+            myPlayerObj.x -= 1;
+            break;
+        case 'up':
+            myPlayerObj.y -= 1;
+            break;
+        case 'down':
+            myPlayerObj.y += 1;
+            break;
+        case 'right':
+            myPlayerObj.x += 1;
+            break;
+    }
+    if (myPlayerObj.x > gameObj.fieldWidth) myPlayerObj.x -= gameObj.fieldWidth;
+    if (myPlayerObj.x < 0) myPlayerObj.x += gameObj.fieldWidth;
+    if (myPlayerObj.y < 0) myPlayerObj.y -= gameObj.fieldHeight;
+    if (myPlayerObj.y > gameObj.fieldHeight) myPlayerObj.y -= gameObj.fieldHeight;
+
+    myPlayerObj.aliveTime.clock += 1;
+    if (myPlayerObj.aliveTime.clock === 30) {
+        myPlayerObj.aliveTime.clock = 0;
+        myPlayerObj.aliveTime.seconds += 1;
+    }
+
+    // 飛んでいるミサイルの移動
+    for (let [missileId, flyingMissile] of flyingMissilesMap) {
+
+        switch (flyingMissile.direction) {
+            case 'left':
+                flyingMissile.x -= gameObj.missileSpeed;
+                break;
+            case 'up':
+                flyingMissile.y -= gameObj.missileSpeed;
+                break;
+            case 'down':
+                flyingMissile.y += gameObj.missileSpeed;
+                break;
+            case 'right':
+                flyingMissile.x += gameObj.missileSpeed;
+                break;
+        }
+        if (flyingMissile.x > gameObj.fieldWidth) flyingMissile.x -= gameObj.fieldWidth;
+        if (flyingMissile.x < 0) flyingMissile.x += gameObj.fieldWidth;
+        if (flyingMissile.y < 0) flyingMissile.y += gameObj.fieldHeight;
+        if (flyingMissile.y > gameObj.fieldHeight) flyingMissile.y -= gameObj.fieldHeight;
+    }
+}
