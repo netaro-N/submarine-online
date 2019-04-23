@@ -271,6 +271,29 @@ function updatePlayerDirection(socketId, direction) {
     playerObj.direction = direction;
 }
 
+function missileEmit(socketId, direction) {
+    if (!gameObj.playersMap.has(socketId)) return;
+
+    let emitPlayerObj = gameObj.playersMap.get(socketId);
+
+    if (emitPlayerObj.missilesMany <= 0) return; // 撃てないやん
+    if (emitPlayerObj.isAlive === false) return; // 死んでるやんけ
+
+    emitPlayerObj.missilesMany -= 1;
+    const missileId = Math.floor(Math.random() * 100000) + ',' + emitPlayerObj.x + ',' + emitPlayerObj.y;
+
+    const missileObj = {
+        emitPlayerId: emitPlayerObj.playerId,
+        emitPlayerSocketId: socketId,
+        x: emitPlayerObj.x,
+        y: emitPlayerObj.y,
+        aliveFlame: gameObj.missileAliveFlame,
+        direction: direction,
+        id: missileId
+    };
+    gameObj.flyingMissilesMap.set(missileId, missileObj);
+}
+
 function disconnect(socketId) {
     gameObj.playersMap.delete(socketId);
 }
@@ -359,5 +382,6 @@ module.exports = {
   newConnection,
   getMapData,
   updatePlayerDirection,
+  missileEmit,
   disconnect
 };
