@@ -68,6 +68,7 @@ function movePlayers(playersMap) {  // 潜水艦の移動
                 player.deadCount += 1;
             } else {
                 gameObj.playersMap.delete(playerId);
+                gameObj.NPCMap.delete(playerId);
             }
             continue;
         }
@@ -238,8 +239,9 @@ function getMapData() {
     const itemsArray = [];
     const airArray = [];
     const flyingMissilesArray = [];
+    const playersAndNPCMap = new Map(Array.from(gameObj.playersMap).concat(Array.from(gameObj.NPCMap)));
 
-    for (let [socketId, plyer] of gameObj.playersMap) {
+    for (let [socketId, plyer] of playersAndNPCMap) {
         const playerDataForSend = [];
 
         playerDataForSend.push(plyer.x);
@@ -296,9 +298,10 @@ function updatePlayerDirection(socketId, direction) {
 }
 
 function missileEmit(socketId, direction) {
-    if (!gameObj.playersMap.has(socketId)) return;
+    const playersAndNPCMap = new Map(Array.from(gameObj.playersMap).concat(Array.from(gameObj.NPCMap)));
+    if (!playersAndNPCMap.has(socketId)) return;
 
-    let emitPlayerObj = gameObj.playersMap.get(socketId);
+    let emitPlayerObj = playersAndNPCMap.get(socketId);
 
     if (emitPlayerObj.missilesMany <= 0) return; // 撃てないやん
     if (emitPlayerObj.isAlive === false) return; // 死んでるやんけ
