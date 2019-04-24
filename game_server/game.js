@@ -5,11 +5,14 @@ const gameObj = {
     playersMap: new Map(),
     itemsMap: new Map(),
     airMap: new Map(),
+    NPCMap: new Map(),
+    addingNPCPlayerNum: 9,
     flyingMissilesMap: new Map(),
     missileAliveFlame: 180,
     missileSpeed: 3,
     missileWidth: 30,
     missileHeight: 30,
+    directions: ['left', 'up', 'down', 'right'],
     fieldWidth: 1000,
     fieldHeight: 1000,
     itemTotal: 15,
@@ -31,9 +34,12 @@ function init() {
 init(); // 初期化（初期化はサーバー起動時に行う）
 
 const gameTicker = setInterval(() => {
-    movePlayers(gameObj.playersMap); // 潜水艦の移動
+    NPCMoveDecision(gameObj.NPCMap); // NPC の行動選択
+    const playersAndNPCMap = new Map(Array.from(gameObj.playersMap).concat(Array.from(gameObj.NPCMap)));
+    movePlayers(playersAndNPCMap); // 潜水艦の移動
     moveMissile(gameObj.flyingMissilesMap); // ミサイルの移動
-    checkGetItem(gameObj.playersMap, gameObj.itemsMap, gameObj.airMap, gameObj.flyingMissilesMap); // アイテムの取得チェック
+    checkGetItem(playersAndNPCMap, gameObj.itemsMap, gameObj.airMap, gameObj.flyingMissilesMap); // アイテムの取得チェック
+    addNPC();
 }, 33);
 
 function movePlayers(playersMap) {  // 潜水艦の移動
