@@ -42,6 +42,24 @@ const gameTicker = setInterval(() => {
     addNPC();
 }, 33);
 
+function NPCMoveDecision(NPCMap) {
+    for (let [NPCId, NPCObj] of NPCMap) {
+
+        switch (NPCObj.level) {
+            case 1:
+                if (Math.floor(Math.random() * 60) === 1) {
+                    NPCObj.direction = gameObj.directions[Math.floor(Math.random() * gameObj.directions.length)];
+                }
+                if (NPCObj.missilesMany > 0 && Math.floor(Math.random() * 90) === 1) {
+                    missileEmit(NPCObj.playerId, NPCObj.direction);
+                }
+                break;
+            case 2:
+            case 3:
+        }
+    }
+}
+
 function movePlayers(playersMap) {  // 潜水艦の移動
     for (let [playerId, player] of playersMap) {
 
