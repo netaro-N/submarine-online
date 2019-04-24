@@ -357,6 +357,36 @@ function addAir() {
     gameObj.airMap.set(airKey, airObj);
 }
 
+function addNPC() {
+    if (gameObj.playersMap.size + gameObj.NPCMap.size < gameObj.addingNPCPlayerNum) {
+        const addMany = gameObj.addingNPCPlayerNum - gameObj.playersMap.size - gameObj.NPCMap.size;
+
+        for(let i = 0; i < addMany ; i++) {
+
+            const playerX = Math.floor(Math.random() * gameObj.fieldWidth);
+            const playerY = Math.floor(Math.random() * gameObj.fieldHeight);
+            const level = Math.floor(Math.random() * 1) + 1;
+            const id = Math.floor(Math.random() * 100000) + ',' + playerX + ',' + playerY + ',' + level;
+            const playerObj = {
+                x: playerX,
+                y: playerY,
+                isAlive: true,
+                deadCount: 0,
+                direction: 'right',
+                missilesMany: 0,
+                airTime: 99,
+                aliveTime: { 'clock': 0, 'seconds':0 },
+                score: 0,
+                level: level,
+                displayName: 'NPC',
+                thumbUrl: 'NPC',
+                playerId: id
+            };
+            gameObj.NPCMap.set(id, playerObj);
+        }
+    }
+}
+
 function calculationBetweenTwoPoints(pX, pY, oX, oY, gameWidth, gameHeight) {
     let distanceX = 99999999;
     let distanceY = 99999999;
